@@ -1,12 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
 import type { PrismaClient } from "../../generated/prisma/index.js";
-import type { SignInInput } from "../../schemas/signup.schema.js";
 import { comparePasswords } from "../../utils/bycrypt.js";
+import { DatabaseError, UnauthorizedError } from "../../utils/errors.js";
 import { createToken } from "../../utils/jwt-tokens.js";
 import getPrismaInstance from "../../utils/prisma-client.js";
 
 export const login = async (
-	req: Request<Record<string, never>, Record<string, never>, SignInInput>,
+	req: Request,
 	res: Response,
 	next: NextFunction,
 ): Promise<void> => {
@@ -16,8 +16,7 @@ export const login = async (
 		const prisma = getPrismaInstance() as PrismaClient;
 
 		if (!prisma) {
-			res.status(500).json({ error: "Database connection error" });
-			return;
+			throw new DatabaseError("Database connection error");
 		}
 
 		// Find user by email
@@ -26,22 +25,14 @@ export const login = async (
 		});
 
 		if (!user) {
-			res.status(401).json({
-				error: "Invalid credentials",
-				details: [{ field: "email", message: "User not found" }],
-			});
-			return;
+			throw new UnauthorizedError("User not found");
 		}
 
 		// Verify password
 		const isPasswordValid = await comparePasswords(password, user.password);
 
 		if (!isPasswordValid) {
-			res.status(401).json({
-				error: "Invalid credentials",
-				details: [{ field: "password", message: "Incorrect password" }],
-			});
-			return;
+			throw new UnauthorizedError("Incorrect password");
 		}
 
 		// Generate JWT token
@@ -76,7 +67,6 @@ export const login = async (
 				message: "Login successful",
 			});
 	} catch (error) {
-		console.error("Login error:", error);
-		res.status(500).json({ error: "Internal Server Error" });
+		next(error); // Pass error to centralized error handler
 	}
 };

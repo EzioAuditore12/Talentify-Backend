@@ -5,12 +5,8 @@ import { signInSchema, signUpSchema } from "../schemas/signup.schema.js";
 
 const authRoutes = Router();
 
-// Test route
-authRoutes.get("/test", (req, res) => {
-	res.json({ message: "Auth routes working!" });
-});
-
-authRoutes.post("/signup", validateBody(signUpSchema), register);
-authRoutes.post("/signin", validateBody(signInSchema), login);
+// Authentication Routes
+authRoutes.post("/register", validateBody(signUpSchema), register);
+authRoutes.post("/login", validateBody(signInSchema), login);
 
 export default authRoutes;

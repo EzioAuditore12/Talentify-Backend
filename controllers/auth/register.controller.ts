@@ -1,12 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
 import type { PrismaClient } from "../../generated/prisma/index.js";
-import type { SignUpInput } from "../../schemas/signup.schema.js";
 import { generatePassword } from "../../utils/bycrypt.js";
+import { ConflictError, DatabaseError } from "../../utils/errors.js";
 import { createToken } from "../../utils/jwt-tokens.js";
 import getPrismaInstance from "../../utils/prisma-client.js";
 
 export const register = async (
-	req: Request<Record<string, never>, Record<string, never>, SignUpInput>,
+	req: Request,
 	res: Response,
 	next: NextFunction,
 ): Promise<void> => {
@@ -16,8 +16,7 @@ export const register = async (
 		const prisma = getPrismaInstance() as PrismaClient;
 
 		if (!prisma) {
-			res.status(500).json({ error: "Database connection error" });
-			return;
+			throw new DatabaseError("Database connection error");
 		}
 
 		// Check if user already exists
@@ -26,16 +25,7 @@ export const register = async (
 		});
 
 		if (existingUser) {
-			res.status(409).json({
-				error: "User already exists",
-				details: [
-					{
-						field: "email",
-						message: "A user with this email already exists",
-					},
-				],
-			});
-			return;
+			throw new ConflictError("A user with this email already exists");
 		}
 
 		// Create new user
@@ -74,7 +64,6 @@ export const register = async (
 				message: "User registered successfully",
 			});
 	} catch (error) {
-		console.error("Registration error:", error);
-		res.status(500).json({ error: "Internal Server Error" });
+		next(error); // Pass error to centralized error handler
 	}
 };

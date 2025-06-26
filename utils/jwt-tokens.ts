@@ -1,8 +1,10 @@
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+
 dotenv.config();
 const JWT_SECRET = process.env.JWT_KEY as string;
-const JWT_EXPIRES_IN = (process.env.JWT_EXPIRATION_TIME?.replace(/"/g, '') || "7d") as string;
+const JWT_EXPIRES_IN = (process.env.JWT_EXPIRATION_TIME?.replace(/"/g, "") ||
+	"7d") as string;
 
 if (!JWT_SECRET) {
 	throw new Error("JWT_KEY is not defined in environment variables");

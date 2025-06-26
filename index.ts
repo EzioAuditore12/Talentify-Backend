@@ -2,7 +2,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-
+import { errorHandler } from "./middlewares/error.middleware.js";
 //routes
 import authRoutes from "./routes/auth.route.js";
 
@@ -21,17 +21,13 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-// Add a test route to verify server is working
-app.get("/", (req, res) => {
-	res.json({ message: "Talentify Backend API is running!" });
-});
-
 app.use("/api/auth", authRoutes);
+
+// Error handling middleware (must be last)
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
 	console.log(`Server started on http://localhost:${PORT}`);
-	console.log(`Test endpoint: http://localhost:${PORT}/`);
-	console.log(`Auth endpoints: http://localhost:${PORT}/api/auth/signup`);
 });

@@ -2,7 +2,7 @@ export class AppError extends Error {
 	public statusCode: number;
 	public isOperational: boolean;
 
-	constructor(message: string, statusCode: number = 500) {
+	constructor(message: string, statusCode = 500) {
 		super(message);
 		this.statusCode = statusCode;
 		this.isOperational = true;
@@ -19,14 +19,14 @@ export class ValidationError extends AppError {
 }
 
 export class UnauthorizedError extends AppError {
-	constructor(message: string = "Unauthorized") {
+	constructor(message = "Unauthorized") {
 		super(message, 401);
 		this.name = "UnauthorizedError";
 	}
 }
 
 export class NotFoundError extends AppError {
-	constructor(message: string = "Resource not found") {
+	constructor(message = "Resource not found") {
 		super(message, 404);
 		this.name = "NotFoundError";
 	}
@@ -40,7 +40,7 @@ export class ConflictError extends AppError {
 }
 
 export class DatabaseError extends AppError {
-	constructor(message: string = "Database connection error") {
+	constructor(message = "Database connection error") {
 		super(message, 500);
 		this.name = "DatabaseError";
 	}

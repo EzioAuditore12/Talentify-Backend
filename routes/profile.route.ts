@@ -1,10 +1,14 @@
+import {
+	GetUserInfo,
+	UpdateUserProfile,
+} from "@/controllers/app/profile/index.js";
+import {authenticateToken} from "@/middlewares/auth.middleware.js"
 import { Router } from "express";
-import { GetUserInfo,UpdateUserProfile } from "@/controllers/app/profile/index.js";
 
-const profileRoutes=Router()
+const profileRoutes = Router();
 
 //Profile Routes
-profileRoutes.post("/get-user-info",GetUserInfo)
-profileRoutes.post("/update-user-profile",UpdateUserProfile)
+profileRoutes.post("/get-user-info",authenticateToken, GetUserInfo);
+profileRoutes.post("/update-user-profile", authenticateToken, UpdateUserProfile);
 
-export default profileRoutes
+export default profileRoutes;

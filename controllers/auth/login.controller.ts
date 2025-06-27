@@ -1,17 +1,13 @@
-import type { NextFunction, Request, Response } from "express";
-
-
-import { DatabaseError, UnauthorizedError } from "@/utils/errors.js";
-
 // Prisma Setup
 import type { PrismaClient } from "@/generated/prisma/index.js";
-import getPrismaInstance from "@/utils/prisma-client.js";
+//Bcrypt
+import { comparePasswords } from "@/utils/bycrypt.js";
+import { DatabaseError, UnauthorizedError } from "@/utils/errors.js";
+import type { NextFunction, Request, Response } from "express";
 
 // JWT
 import { createToken } from "@/utils/jwt-tokens.js";
-
-//Bcrypt
-import { comparePasswords } from "@/utils/bycrypt.js";
+import getPrismaInstance from "@/utils/prisma-client.js";
 
 export const login = async (
 	req: Request,

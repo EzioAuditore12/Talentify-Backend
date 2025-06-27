@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
-// 
+//Error Handler
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 //routes
@@ -26,12 +26,12 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
-app.use("/api/profile",profileRoutes)
+app.use("/api/profile", profileRoutes);
 
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
 	console.log(`Server started on http://localhost:${PORT}`);

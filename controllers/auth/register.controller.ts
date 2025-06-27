@@ -1,9 +1,9 @@
-import type { NextFunction, Request, Response } from "express";
 import type { PrismaClient } from "@/generated/prisma/index.js";
 import { generatePassword } from "@/utils/bycrypt.js";
 import { ConflictError, DatabaseError } from "@/utils/errors.js";
 import { createToken } from "@/utils/jwt-tokens.js";
 import getPrismaInstance from "@/utils/prisma-client.js";
+import type { NextFunction, Request, Response } from "express";
 
 export const register = async (
 	req: Request,

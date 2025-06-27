@@ -1,6 +1,6 @@
-import type { NextFunction, Request, Response } from "express";
-import { verifyToken } from "@/utils/jwt-tokens.js";
 import { UnauthorizedError } from "@/utils/errors.js";
+import { verifyToken } from "@/utils/jwt-tokens.js";
+import type { NextFunction, Request, Response } from "express";
 
 // Extend Express Request type to include user data
 declare global {
@@ -44,14 +44,17 @@ export const authenticateToken = (
 
 		next();
 	} catch (error) {
-		if (error instanceof Error && error.message === "Invalid or expired token") {
+		if (
+			error instanceof Error &&
+			error.message === "Invalid or expired token"
+		) {
 			res.status(401).json({
 				error: "Invalid or expired token",
 				message: "Please login again",
 			});
 			return;
 		}
-		
+
 		next(error); // Pass other errors to centralized error handler
 	}
 };

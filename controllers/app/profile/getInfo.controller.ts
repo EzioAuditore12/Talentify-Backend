@@ -34,7 +34,7 @@ export const GetUserInfo = async (
 		}
 
 		res.status(200).json({
-			id: user.id,
+			uuid: user.uuid,
 			email: user.email,
 			fullname: user.fullName,
 			description: user.description,

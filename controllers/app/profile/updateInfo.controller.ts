@@ -18,13 +18,13 @@ export const UpdateUserProfile = async (
 	try {
 		const { fullName, description, profileImage } = req.body;
 
-		// Get email from authenticated user (set by auth middleware)
-		const email = req.user?.email;
-		
-		console.log("Authenticated user email:", email);
+		// Get uuid from authenticated user (set by auth middleware)
+		const userUuid = req.user?.userId
+
+		console.log("Authenticated user uuid:",userUuid);
 		console.log("Email from body (ignored):", req.body.email);
 
-		if (!email) {
+		if (!userUuid) {
 			throw new UnauthorizedError("User authentication required");
 		}
 
@@ -35,7 +35,7 @@ export const UpdateUserProfile = async (
 		}
 
 		const existingUser = await prisma.user.findUnique({
-			where: { email },
+			where: { uuid: userUuid },
 		});
 
 		if (!existingUser) {
@@ -54,13 +54,13 @@ export const UpdateUserProfile = async (
 		}
 
 		const updatedUser = await prisma.user.update({
-			where: { email },
+			where: { uuid: userUuid },
 			data: updateData,
 		});
 
 		res.status(200).json({
 			user: {
-				id: updatedUser.id,
+				uuid: updatedUser.uuid,
 				email: updatedUser.email,
 				username: updatedUser.username,
 				fullName: updatedUser.fullName,

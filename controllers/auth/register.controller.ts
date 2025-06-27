@@ -39,7 +39,9 @@ export const register = async (
 		// Generate JWT token
 		const token = createToken({
 			email: user.email,
-			userId: user.id.toString(),
+			userId: user.uuid,
+			username: user.username,
+			fullName: user.fullName,
 			isProfileInfoSet: user.isProfileInfoSet,
 		});
 
@@ -54,7 +56,7 @@ export const register = async (
 			.status(201)
 			.json({
 				user: {
-					id: user.id,
+					uuid: user.uuid,
 					email: user.email,
 					username: user.username,
 					fullName: user.fullName,

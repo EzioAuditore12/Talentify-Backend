@@ -9,12 +9,16 @@ import getPrismaInstance from "@/utils/prisma-client.js";
 import type { UpdateProfileInput } from "@/schemas/app/profile/updateProfile.schema.js";
 
 export const UpdateUserProfile = async (
-	req: Request<Record<string,never>,Record<string,never>,UpdateProfileInput>,
+	req: Request<
+		Record<string, never>,
+		Record<string, never>,
+		UpdateProfileInput
+	>,
 	res: Response,
 	next: NextFunction,
 ) => {
 	try {
-		const { fullName,username, description, } = req.body;
+		const { fullName, username, description } = req.body;
 
 		const userUuid = req.user?.userId;
 
@@ -36,7 +40,7 @@ export const UpdateUserProfile = async (
 
 		if (fullName !== undefined) updateData.fullName = fullName;
 		if (description !== undefined) updateData.description = description;
-		if (username !== undefined) updateData.username=username;
+		if (username !== undefined) updateData.username = username;
 
 		if (fullName && !existingUser.isProfileInfoSet) {
 			updateData.isProfileInfoSet = true;

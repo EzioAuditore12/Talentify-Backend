@@ -10,7 +10,7 @@ import { Router } from "express";
 const profileRoutes = Router();
 
 // Get user Details
-profileRoutes.get("/get-user-info",authenticateToken, GetUserInfo);
+profileRoutes.get("/get-user-info", authenticateToken, GetUserInfo);
 
 //Update user details
 profileRoutes.post(

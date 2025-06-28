@@ -7,7 +7,7 @@ import type { NextFunction, Request, Response } from "express";
 import type { SignUpInput } from "@/schemas/auth/register.schema.js";
 
 export const register = async (
-	req: Request<Record<string,never>,Record<string,never>,SignUpInput>,
+	req: Request<Record<string, never>, Record<string, never>, SignUpInput>,
 	res: Response,
 	next: NextFunction,
 ): Promise<void> => {

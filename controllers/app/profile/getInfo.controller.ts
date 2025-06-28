@@ -4,7 +4,6 @@ import type { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "@/utils/errors.js";
 import getPrismaInstance from "@/utils/prisma-client.js";
 
-
 export const GetUserInfo = async (
 	req: Request,
 	res: Response,
@@ -12,7 +11,7 @@ export const GetUserInfo = async (
 ): Promise<void> => {
 	try {
 		// Get email from authenticated user (set by auth middleware)
-		const userUuid=req.user?.userId
+		const userUuid = req.user?.userId;
 
 		if (!userUuid) {
 			throw new UnauthorizedError("User authentication required");

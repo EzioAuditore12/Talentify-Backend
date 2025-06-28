@@ -1,38 +1,28 @@
 import type { NextFunction, Request, Response } from "express";
 
 //Prisma
-import type { Prisma, PrismaClient } from "@/generated/prisma/index.js";
+import type { Prisma } from "@/generated/prisma/index.js";
 // Error Classes
-import {
-	DatabaseError,
-	UnauthorizedError,
-	ValidationError,
-} from "@/utils/errors.js";
+import { UnauthorizedError } from "@/utils/errors.js";
 import getPrismaInstance from "@/utils/prisma-client.js";
 
+import type { UpdateProfileInput } from "@/schemas/app/profile/updateProfile.schema.js";
+
 export const UpdateUserProfile = async (
-	req: Request,
+	req: Request<Record<string,never>,Record<string,never>,UpdateProfileInput>,
 	res: Response,
 	next: NextFunction,
 ) => {
 	try {
-		const { fullName, description, profileImage } = req.body;
+		const { fullName,username, description, } = req.body;
 
-		// Get uuid from authenticated user (set by auth middleware)
-		const userUuid = req.user?.userId
-
-		console.log("Authenticated user uuid:",userUuid);
-		console.log("Email from body (ignored):", req.body.email);
+		const userUuid = req.user?.userId;
 
 		if (!userUuid) {
 			throw new UnauthorizedError("User authentication required");
 		}
 
-		const prisma = getPrismaInstance() as PrismaClient;
-
-		if (!prisma) {
-			throw new DatabaseError("Unable to connect to database");
-		}
+		const prisma = getPrismaInstance();
 
 		const existingUser = await prisma.user.findUnique({
 			where: { uuid: userUuid },
@@ -46,9 +36,8 @@ export const UpdateUserProfile = async (
 
 		if (fullName !== undefined) updateData.fullName = fullName;
 		if (description !== undefined) updateData.description = description;
-		if (profileImage !== undefined) updateData.profileImage = profileImage;
+		if (username !== undefined) updateData.username=username;
 
-		// Mark profile as complete if fullName is provided
 		if (fullName && !existingUser.isProfileInfoSet) {
 			updateData.isProfileInfoSet = true;
 		}

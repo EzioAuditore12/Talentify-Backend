@@ -1,27 +1,27 @@
-// Prisma Setup
-import type { PrismaClient } from "@/generated/prisma/index.js";
 //Bcrypt
 import { comparePasswords } from "@/utils/bycrypt.js";
-import { DatabaseError, UnauthorizedError } from "@/utils/errors.js";
+
+//Error Class
+import { UnauthorizedError } from "@/utils/errors.js";
+
 import type { NextFunction, Request, Response } from "express";
+
+//Schema
+import type { SignInInput } from "@/schemas/auth/login.schema.js";
 
 // JWT
 import { createToken } from "@/utils/jwt-tokens.js";
 import getPrismaInstance from "@/utils/prisma-client.js";
 
 export const login = async (
-	req: Request,
+	req: Request<Record<string, never>, Record<string, never>, SignInInput>,
 	res: Response,
 	next: NextFunction,
 ): Promise<void> => {
 	try {
-		const { email, password } = req.body; // Already validated by Zod middleware
+		const { email, password } = req.body;
 
-		const prisma = getPrismaInstance() as PrismaClient;
-
-		if (!prisma) {
-			throw new DatabaseError("Database connection error");
-		}
+		const prisma = getPrismaInstance();
 
 		// Find user by email
 		const user = await prisma.user.findUnique({
@@ -41,11 +41,7 @@ export const login = async (
 
 		// Generate JWT token
 		const token = createToken({
-			email: user.email,
 			userId: user.uuid,
-			username: user.username,
-			fullName: user.fullName,
-			isProfileInfoSet: user.isProfileInfoSet,
 		});
 
 		// Set cookie and send response

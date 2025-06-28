@@ -1,10 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 
-//Primsa Client
-import type { PrismaClient } from "@/generated/prisma/client.js";
 //Error Class
-import { DatabaseError, UnauthorizedError } from "@/utils/errors.js";
+import { UnauthorizedError } from "@/utils/errors.js";
 import getPrismaInstance from "@/utils/prisma-client.js";
+
 
 export const GetUserInfo = async (
 	req: Request,
@@ -13,20 +12,16 @@ export const GetUserInfo = async (
 ): Promise<void> => {
 	try {
 		// Get email from authenticated user (set by auth middleware)
-		const email = req.user?.email;
+		const userUuid=req.user?.userId
 
-		if (!email) {
+		if (!userUuid) {
 			throw new UnauthorizedError("User authentication required");
 		}
 
-		const prisma = getPrismaInstance() as PrismaClient;
-
-		if (!prisma) {
-			throw new DatabaseError("Database connection error");
-		}
+		const prisma = getPrismaInstance();
 
 		const user = await prisma.user.findUnique({
-			where: { email },
+			where: { uuid: userUuid },
 		});
 
 		if (!user) {
@@ -41,6 +36,8 @@ export const GetUserInfo = async (
 			profileImage: user.profileImage,
 			message: `Data retreival of ${user.fullName} is successful`,
 		});
+
+		console.log("Successfuly updated user profile info ", user.email);
 	} catch (error) {
 		next(error);
 	}

@@ -7,11 +7,7 @@ declare global {
 	namespace Express {
 		interface Request {
 			user?: {
-				email: string;
 				userId: string;
-				username: string;
-				fullName: string;
-				isProfileInfoSet: boolean;
 			};
 		}
 	}
@@ -24,6 +20,7 @@ export const authenticateToken = (
 ): void => {
 	try {
 		// Get token from cookie or Authorization header
+		//TODO:
 		const token = req.cookies?.jwt || req.headers.authorization?.split(" ")[1];
 
 		if (!token) {
@@ -35,11 +32,7 @@ export const authenticateToken = (
 
 		// Add user data to request object
 		req.user = {
-			email: decoded.email as string,
 			userId: decoded.userId as string,
-			username: decoded.username as string,
-			fullName: decoded.fullName as string,
-			isProfileInfoSet: decoded.isProfileInfoSet as boolean,
 		};
 
 		next();
@@ -71,11 +64,7 @@ export const optionalAuth = (
 		if (token) {
 			const decoded = verifyToken(token);
 			req.user = {
-				email: decoded.email as string,
 				userId: decoded.userId as string,
-				username: decoded.username as string,
-				fullName: decoded.fullName as string,
-				isProfileInfoSet: decoded.isProfileInfoSet as boolean,
 			};
 		}
 

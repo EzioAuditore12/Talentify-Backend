@@ -1,23 +1,20 @@
-import type { PrismaClient } from "@/generated/prisma/index.js";
 import { generatePassword } from "@/utils/bycrypt.js";
 import { ConflictError, DatabaseError } from "@/utils/errors.js";
 import { createToken } from "@/utils/jwt-tokens.js";
 import getPrismaInstance from "@/utils/prisma-client.js";
 import type { NextFunction, Request, Response } from "express";
 
+import type { SignUpInput } from "@/schemas/auth/register.schema.js";
+
 export const register = async (
-	req: Request,
+	req: Request<Record<string,never>,Record<string,never>,SignUpInput>,
 	res: Response,
 	next: NextFunction,
 ): Promise<void> => {
 	try {
 		const { email, password } = req.body; // Already validated by Zod middleware
 
-		const prisma = getPrismaInstance() as PrismaClient;
-
-		if (!prisma) {
-			throw new DatabaseError("Database connection error");
-		}
+		const prisma = getPrismaInstance();
 
 		// Check if user already exists
 		const existingUser = await prisma.user.findUnique({
@@ -38,11 +35,7 @@ export const register = async (
 
 		// Generate JWT token
 		const token = createToken({
-			email: user.email,
 			userId: user.uuid,
-			username: user.username,
-			fullName: user.fullName,
-			isProfileInfoSet: user.isProfileInfoSet,
 		});
 
 		// Set cookie and send response
@@ -53,7 +46,7 @@ export const register = async (
 				secure: process.env.NODE_ENV === "production",
 				sameSite: "strict",
 			})
-			.status(201)
+			.status(201) //  successfullly create
 			.json({
 				user: {
 					uuid: user.uuid,
@@ -66,6 +59,6 @@ export const register = async (
 				message: "User registered successfully",
 			});
 	} catch (error) {
-		next(error); // Pass error to centralized error handler
+		next(error);
 	}
 };

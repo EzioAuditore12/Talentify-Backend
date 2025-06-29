@@ -1,7 +1,8 @@
-import { getUserInfo, updateUserProfile } from "@/controllers/app/profile";
+import { getUserInfo, updateUserProfile, updateUserProfilePhoto } from "@/controllers/app/profile";
 import { authenticateToken } from "@/middlewares/auth.middleware";
 import { validateBody } from "@/middlewares/validation.middleware";
 import { updateProfileSchema } from "@/schemas/app/profile";
+import { upload } from "@/middlewares/multer.middleware";
 import { Router } from "express";
 
 const profileRoutes = Router();
@@ -16,5 +17,13 @@ profileRoutes.post(
 	authenticateToken,
 	updateUserProfile,
 );
+
+//Update User Profile
+profileRoutes.post(
+    "/update-profile-photo",
+    authenticateToken,
+    upload.single("profilePhoto"),
+    updateUserProfilePhoto
+)
 
 export default profileRoutes;

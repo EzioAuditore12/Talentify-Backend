@@ -1,5 +1,5 @@
-import multer from "multer";
 import { profilePhotoFileValidation } from "@/schemas/app/profile";
+import multer from "multer";
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -15,16 +15,24 @@ const storage = multer.diskStorage({
 });
 
 // File filter for profile photos
-const profilePhotoFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const profilePhotoFilter = (
+	req: Express.Request,
+	file: Express.Multer.File,
+	cb: multer.FileFilterCallback,
+) => {
 	// Check if the file type is allowed
 	if (profilePhotoFileValidation.allowedMimeTypes.includes(file.mimetype)) {
 		cb(null, true);
 	} else {
-		cb(new Error(`Invalid file type. Only ${profilePhotoFileValidation.allowedMimeTypes.join(", ")} are allowed.`));
+		cb(
+			new Error(
+				`Invalid file type. Only ${profilePhotoFileValidation.allowedMimeTypes.join(", ")} are allowed.`,
+			),
+		);
 	}
 };
 
-export const upload = multer({ 
+export const upload = multer({
 	storage: storage,
 	limits: {
 		fileSize: profilePhotoFileValidation.maxFileSize, // 5MB

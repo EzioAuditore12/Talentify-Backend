@@ -34,12 +34,18 @@ const uploadOnCloudinary = async ({
 			unlinkSync(localFilePath);
 			console.log("Local file deleted successfully:", localFilePath);
 		} catch (cleanupError) {
-			console.error("Error cleaning up local file:", localFilePath, cleanupError);
+			console.error(
+				"Error cleaning up local file:",
+				localFilePath,
+				cleanupError,
+			);
 			// Re-throw if it's a permissions issue that needs attention
-			if (cleanupError instanceof Error && 'code' in cleanupError) {
+			if (cleanupError instanceof Error && "code" in cleanupError) {
 				const nodeError = cleanupError as NodeJS.ErrnoException;
-				if (nodeError.code === 'EACCES' || nodeError.code === 'EPERM') {
-					console.error("Permission denied when trying to delete file. Check file permissions.");
+				if (nodeError.code === "EACCES" || nodeError.code === "EPERM") {
+					console.error(
+						"Permission denied when trying to delete file. Check file permissions.",
+					);
 				}
 			}
 		}
@@ -51,7 +57,11 @@ const uploadOnCloudinary = async ({
 			unlinkSync(localFilePath);
 			console.log("Local file deleted after upload failure:", localFilePath);
 		} catch (cleanupError) {
-			console.error("Error cleaning up local file after upload failure:", localFilePath, cleanupError);
+			console.error(
+				"Error cleaning up local file after upload failure:",
+				localFilePath,
+				cleanupError,
+			);
 		}
 		console.error("Cloudinary upload error:", error);
 		return null;

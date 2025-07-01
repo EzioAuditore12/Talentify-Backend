@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["./prisma", "./node_modules", "./yarn.lock", "./generated"]
+		"ignore": ["./src/generated"]
 	},
 	"formatter": {
 		"enabled": true,

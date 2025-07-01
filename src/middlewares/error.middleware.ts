@@ -1,6 +1,22 @@
 import { AppError } from "@/utils/errors.js";
 import type { NextFunction, Request, Response } from "express";
 
+// Type guard for errors with statusCode
+interface ErrorWithStatusCode {
+	statusCode: number;
+	message: string;
+	name: string;
+}
+
+function hasStatusCode(error: unknown): error is ErrorWithStatusCode {
+	return (
+		typeof error === "object" &&
+		error !== null &&
+		"statusCode" in error &&
+		typeof (error as { statusCode: unknown }).statusCode === "number"
+	);
+}
+
 export const errorHandler = (
 	error: Error,
 	req: Request,
@@ -21,19 +37,16 @@ export const errorHandler = (
 		return;
 	}
 
-	// Handle custom AppError instances
-	if (error instanceof AppError) {
-		res.status(error.statusCode).json({
-			error: error.name,
-			message: error.message,
-		});
-		return;
-	}
-
-	// Handle other known errors
-	if (error.name === "ValidationError") {
-		res.status(400).json({
-			error: "Validation Error",
+	// Handle custom AppError instances and errors with statusCode
+	if (error instanceof AppError || hasStatusCode(error)) {
+		const statusCode =
+			error instanceof AppError
+				? error.statusCode
+				: hasStatusCode(error)
+					? error.statusCode
+					: 500;
+		res.status(statusCode).json({
+			error: error.name || "Error",
 			message: error.message,
 		});
 		return;

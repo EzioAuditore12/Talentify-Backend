@@ -7,7 +7,7 @@ app.use(express.json());
 
 app.use(
 	cors({
-		origin: !process.env.PUBLIC_URL,
+		origin: process.env.PUBLIC_URL,
 		methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 		credentials: true,
 	}),
@@ -15,9 +15,15 @@ app.use(
 
 //routes
 import authRoute from "./routes/auth.route";
+import gigsRoutes from "./routes/gigs.route";
 import profileRoutes from "./routes/profile.routes";
 
 app.use("/api/auth", authRoute);
 app.use("/api/profile", profileRoutes);
+app.use("/api/gigs", gigsRoutes);
+
+// Error handling middleware (must be last)
+import { errorHandler } from "./middlewares/error.middleware";
+app.use(errorHandler);
 
 export { app };

@@ -30,7 +30,7 @@ export const getUserInfo = async (
 		res.status(200).json({
 			uuid: user.uuid,
 			email: user.email,
-			fullname: user.fullName,
+			fullName: user.fullName,
 			description: user.description,
 			profileImage: user.profileImage,
 			message: `Data retreival of ${user.fullName} is successful`,

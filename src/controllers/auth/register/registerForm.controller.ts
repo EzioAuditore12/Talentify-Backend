@@ -49,11 +49,11 @@ export const registerForm = async (
 					email: user.email,
 					username: user.username,
 					fullName: user.fullName,
-					profileImage:user.profileImage,
+					profileImage: user.profileImage,
 					isProfileInfoSet: user.isProfileInfoSet,
 					createdAt: user.createdAt,
 				},
-				token:token,
+				token: token,
 				message: "User registered successfully",
 			});
 	} catch (error) {

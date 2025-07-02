@@ -22,7 +22,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/profile", profileRoutes);
 app.use("/api/gigs", gigsRoutes);
 
-// Error handling middleware 
+// Error handling middleware
 import { errorHandler } from "./middlewares/error.middleware";
 app.use(errorHandler);
 

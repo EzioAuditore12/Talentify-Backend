@@ -64,7 +64,7 @@ export const loginForm = async (
 					isProfileInfoSet: user.isProfileInfoSet,
 					createdAt: user.createdAt,
 				},
-				token:token,
+				token: token,
 				message: "Login successful",
 			});
 	} catch (error) {

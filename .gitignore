@@ -1,0 +1,11 @@
+#NODE_MODULES
+node_modules
+
+#PRODUCTION ENVIRONMENT VARIABLES
+.env
+
+#PRISMA GENERATED FILES
+generated
+
+#BUILDS
+dist

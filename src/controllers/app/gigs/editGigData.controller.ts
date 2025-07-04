@@ -1,15 +1,15 @@
 import { unlinkSync } from "node:fs";
-import type { createGigSchemaInput } from "@/schemas/app/gigs/createGig.schema";
-import { uploadOnCloudinary } from "@/utils/cloudinary";
+import type { editGigSchemaInput } from "@/schemas/app/gigs/editGigData.schema";
+import { deleteFromCloudinary, uploadOnCloudinary } from "@/utils/cloudinary";
 import { DatabaseError, UnauthorizedError } from "@/utils/errors";
 import { getPrismaInstance } from "@/utils/prisma-client";
 import type { NextFunction, Request, Response } from "express";
 
-export const createGig = async (
+export const editGigData = async (
 	req: Request<
 		Record<string, never>,
 		Record<string, never>,
-		createGigSchemaInput
+		editGigSchemaInput
 	>,
 	res: Response,
 	next: NextFunction,
@@ -19,7 +19,6 @@ export const createGig = async (
 
 		if (!userUUid) throw new UnauthorizedError("User details are not here");
 
-		// Use req.body instead of req.query for POST data
 		const {
 			title,
 			description,
@@ -30,6 +29,8 @@ export const createGig = async (
 			time,
 			shortDesc,
 		} = req.body;
+
+		const gigId = req.params.gigId;
 
 		const imageUrls: string[] = [];
 		if (req.files && Array.isArray(req.files)) {
@@ -70,23 +71,44 @@ export const createGig = async (
 
 		const prisma = getPrismaInstance();
 
-		await prisma.gigs.create({
+		const oldData = await prisma.gigs.findUnique({
+			where: { id: Number.parseInt(gigId) },
+		});
+
+		// Delete old images from Cloudinary if new images are uploaded
+		if (oldData?.images && imageUrls.length > 0) {
+			const deletionResult = await deleteFromCloudinary(oldData.images);
+
+			if (deletionResult.failed.length > 0) {
+				console.warn(
+					`Failed to delete ${deletionResult.failed.length} images from Cloudinary`,
+				);
+			}
+
+			console.log(
+				`Successfully deleted ${deletionResult.successful.length} old images from Cloudinary`,
+			);
+		}
+
+		await prisma.gigs.update({
+			where: { id: Number.parseInt(gigId) },
 			data: {
-				title: title,
-				description: description,
-				deliveryTime: Number.parseInt(String(time), 10),
-				category: String(category),
-				features: features ? [String(features)] : undefined,
-				price: Number.parseInt(String(price), 10),
-				shortDesc: shortDesc,
-				revisions: Number.parseInt(String(revisions), 10),
-				createdBy: { connect: { uuid: userUUid } },
-				images: imageUrls,
+				...(title && { title }),
+				...(description && { description }),
+				...(time && { deliveryTime: Number.parseInt(String(time), 10) }),
+				...(category && { category: String(category) }),
+				...(features && {
+					features: Array.isArray(features) ? features : [String(features)],
+				}),
+				...(price && { price: Number.parseInt(String(price), 10) }),
+				...(shortDesc && { shortDesc }),
+				...(revisions && { revisions: Number.parseInt(String(revisions), 10) }),
+				...(imageUrls.length > 0 && { images: imageUrls }),
 			},
 		});
 
 		res.status(201).json({
-			message: "Gig created successfully",
+			message: "Successfully updated gig",
 		});
 	} catch (error) {
 		next(error);

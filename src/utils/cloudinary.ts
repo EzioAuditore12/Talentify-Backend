@@ -68,4 +68,45 @@ const uploadOnCloudinary = async ({
 	}
 };
 
-export { uploadOnCloudinary };
+/**
+ * Delete multiple images from Cloudinary
+ * @param imageUrls - Array of Cloudinary image URLs to delete
+ * @param resourceType - Type of resource (image, video, raw, auto)
+ * @returns Promise with deletion results
+ */
+const deleteFromCloudinary = async (
+	imageUrls: string[],
+	resourceType: "image" | "raw" | "video" | "auto" = "image",
+) => {
+	const results = {
+		successful: [] as string[],
+		failed: [] as { url: string; error: unknown }[],
+	};
+
+	for (const imageUrl of imageUrls) {
+		try {
+			// Extract public_id from Cloudinary URL
+			// URL format: https://res.cloudinary.com/<cloud_name>/image/upload/v<version>/<public_id>.<ext>
+			const urlParts = imageUrl.split("/");
+			const fileWithExt = urlParts[urlParts.length - 1];
+			const publicId = fileWithExt.split(".")[0];
+
+			if (publicId) {
+				await cloudinary.uploader.destroy(publicId, {
+					resource_type: resourceType,
+				});
+				console.log(`Successfully deleted from Cloudinary: ${publicId}`);
+				results.successful.push(imageUrl);
+			} else {
+				throw new Error("Could not extract public_id from URL");
+			}
+		} catch (deleteError) {
+			console.error("Failed to delete image from Cloudinary:", deleteError);
+			results.failed.push({ url: imageUrl, error: deleteError });
+		}
+	}
+
+	return results;
+};
+
+export { uploadOnCloudinary, deleteFromCloudinary };

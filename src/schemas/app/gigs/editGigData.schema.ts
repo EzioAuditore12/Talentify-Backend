@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const createGigSchema = z
+export const editGigDataSchema = z
 	.object({
 		title: z.string().max(120).nonempty(),
 		description: z.string().max(400).nonempty(),
@@ -11,6 +11,7 @@ export const createGigSchema = z
 		shortDesc: z.string(),
 		features: z.array(z.string()),
 	})
+	.partial()
 	.strict();
 
-export type createGigSchemaInput = z.infer<typeof createGigSchema>;
+export type editGigSchemaInput = z.infer<typeof editGigDataSchema>;

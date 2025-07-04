@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
-		"target": "es5", // Compile to ES5 for broader compatibility
-		"module": "commonjs", // Use CommonJS modules (Node.js default)
-		"sourceMap": true, // Generate source maps for debugging
+		"target": "es2022", // Compile to ES5 for broader compatibility
+		"module": "nodenext", // Use CommonJS modules (Node.js default)
+		"sourceMap": false, // Generate source maps for debugging
 		"outDir": "dist", // Output compiled files to the `dist` folder
 		"rootDir": "src", // Define the root directory for your source files
 		"baseUrl": ".", // Required for path aliases

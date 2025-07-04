@@ -38,9 +38,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createGig = void 0;
 var node_fs_1 = require("node:fs");
+var cloudinary_1 = require("@/utils/cloudinary");
 var errors_1 = require("@/utils/errors");
 var prisma_client_1 = require("@/utils/prisma-client");
-var cloudinary_1 = require("@/utils/cloudinary");
 var createGig = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var userUUid, _a, title, description, category, features, price, revisions, time, shortDesc, imageUrls, _i, _b, file, cloudinaryResponse, _c, _d, remainingFile, error_1, _e, _f, fileToClean, prisma, error_2;
     var _g;

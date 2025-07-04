@@ -1,8 +1,8 @@
 import { unlinkSync } from "node:fs";
 import type { createGigSchemaInput } from "@/schemas/app/gigs/createGig.schema";
-import { UnauthorizedError, DatabaseError } from "@/utils/errors";
-import { getPrismaInstance } from "@/utils/prisma-client";
 import { uploadOnCloudinary } from "@/utils/cloudinary";
+import { DatabaseError, UnauthorizedError } from "@/utils/errors";
+import { getPrismaInstance } from "@/utils/prisma-client";
 import type { NextFunction, Request, Response } from "express";
 
 export const createGig = async (
@@ -30,7 +30,6 @@ export const createGig = async (
 			time,
 			shortDesc,
 		} = req.body;
-
 
 		const imageUrls: string[] = [];
 		if (req.files && Array.isArray(req.files)) {
@@ -90,6 +89,6 @@ export const createGig = async (
 			message: "Gig created successfully",
 		});
 	} catch (error) {
-		next(error); 
+		next(error);
 	}
 };

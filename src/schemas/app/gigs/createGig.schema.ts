@@ -6,7 +6,7 @@ export const createGigSchema = z
 		description: z.string().max(400).nonempty(),
 		category: z.string().nonempty(),
 		price: z.coerce.number(),
-		revisions:  z.coerce.number(),
+		revisions: z.coerce.number(),
 		time: z.string(),
 		shortDesc: z.string(),
 		features: z.array(z.string()),

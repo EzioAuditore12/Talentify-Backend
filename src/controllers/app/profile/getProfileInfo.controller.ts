@@ -36,7 +36,7 @@ export const getUserInfo = async (
 			message: `Data retreival of ${user.fullName} is successful`,
 		});
 
-		console.log("Successfuly updated user profile info ", user.email);
+		console.log("Successfuly gotten user profile info ", user.email);
 	} catch (error) {
 		next(error);
 	}

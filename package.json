@@ -8,7 +8,7 @@
 		"dev": "nodemon",
 		"prestart": "yarn build",
 		"start": "ts-node --project ./tsconfig.json -r tsconfig-paths/register dist/index.js",
-		"postinstall": "yarn build && npx prisma generate --schema=./src/prisma/schema.prisma",
+		"postinstall": "npx prisma generate --schema=./src/prisma/schema.prisma && yarn build",
 		"db:generate": "npx prisma generate --schema=./src/prisma/schema.prisma",
 		"db:push": "npx prisma db push --schema=./src/prisma/schema.prisma",
 		"db:migrate": "npx prisma migrate dev --schema=./src/prisma/schema.prisma",

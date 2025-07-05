@@ -12,7 +12,6 @@ import {
 } from "@/controllers/app/gigs";
 import { createGigSchema, editGigDataSchema } from "@/schemas/app/gigs";
 
-
 const gigsRoutes = Router();
 
 //Create Gig
@@ -40,10 +39,6 @@ gigsRoutes.post(
 );
 
 // Search Gigs
-gigsRoutes.get(
-	"/search-gigs",
-	searchGigs
-)
-
+gigsRoutes.get("/search-gigs", searchGigs);
 
 export default gigsRoutes;

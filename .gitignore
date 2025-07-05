@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #NODE_MODULES
 node_modules
 
@@ -10,10 +9,3 @@ generated
 
 #Builds
 dist
-=======
-node_modules
-# Keep environment variables out of version control
-.env
-
-generated
->>>>>>> debb65b8a271cfe7e295607641e88785ff9c65de

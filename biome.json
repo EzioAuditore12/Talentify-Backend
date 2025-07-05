@@ -7,11 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-<<<<<<< HEAD
 		"ignore": ["./src/generated", "./dist"]
-=======
-		"ignore": ["./src/generated"]
->>>>>>> debb65b8a271cfe7e295607641e88785ff9c65de
 	},
 	"formatter": {
 		"enabled": true,
